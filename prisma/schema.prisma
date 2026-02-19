@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  email     String   @unique @db.VarChar(255)
+  avatarUrl String?  @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Organization {
+  id              Int      @id @default(autoincrement())
+  name            String   @db.VarChar(255)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  createdByUserId Int
+}
+
+model Membership {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  organizationId  Int
+  role            String   @db.VarChar(255)
+  joinedAt        DateTime @default(now())
+  invitedByUserId Int?
+}
+
+model Contact {
+  id             Int      @id @default(autoincrement())
+  organizationId Int
+  name           String   @db.VarChar(255)
+  email          String   @db.VarChar(255)
+  phone          String   @db.VarChar(255)
+  companyId      Int?
+  ownerId        Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Stage {
+  id             Int      @id @default(autoincrement())
+  organizationId Int
+  name           String   @db.VarChar(255)
+  order          Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Company {
+  id             Int      @id @default(autoincrement())
+  organizationId Int
+  name           String   @db.VarChar(255)
+  email          String   @db.VarChar(255)
+  phone          String   @db.VarChar(255)
+  ownerId        Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Deal {
+  id                Int       @id @default(autoincrement())
+  organizationId    Int
+  title             String    @db.VarChar(255)
+  value             Int
+  stageId           Int
+  status            String    @db.VarChar(255)
+  ownerId           Int
+  contactId         Int?
+  companyId         Int?
+  expectedCloseDate DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model Task {
+  id               Int       @id @default(autoincrement())
+  organizationId   Int
+  title            String    @db.VarChar(255)
+  type             String    @db.VarChar(255)
+  dueDate          DateTime?
+  completed        Boolean   @default(false)
+  assignedToUserId Int?
+  dealId           Int?
+  contactId        Int?
+  companyId        Int?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model ActivityLog {
+  id                Int      @id @default(autoincrement())
+  organizationId    Int
+  entityType        String   @db.VarChar(255)
+  entityId          Int
+  actionType        String   @db.VarChar(255)
+  performedByUserId Int
+  oldValue          String?
+  newValue          String?
+  createdAt         DateTime @default(now())
+}
